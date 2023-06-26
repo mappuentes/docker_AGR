@@ -1,7 +1,8 @@
 FROM ubuntu:22.04
 
 # Run the command to install the required packages
-RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2
+RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2 && apt install snapd
+RUN snap install frr
 
 
 # Execute apache in foreground as default
