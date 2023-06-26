@@ -21,14 +21,15 @@ services:
       - c-r
       - s-r
   client:
-    image: ubuntu:22.04
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
     command: 
       #- "sleep 1d" change this in:
       #  - "tail -f /dev/null" #doesn't work for the same reason
       - "/bin/sleep"
-      - "infinity" 
-    network_mode: "service:router"     
-  server:
+      - "infinity"      
+  server_:
     image: node:16.20.0-alpine3.18
     command: 
       #- "sleep 1d" change this in:
@@ -37,11 +38,9 @@ services:
       - "infinity"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.server.rule=Host(`node.localhost`)"
-      - "traefik.http.routers.server.entrypoints=web"
-      - "traefik.http.services.nginx.loadbalancer.server.port=80"
-      - "traefik.http.routers.server.server=server"
-    network_mode: "service:router"
+      - "traefik.http.routers.server_.rule=Host(`node.localhost`)"
+      - "traefik.http.routers.server_.entrypoints=web"
+      - "traefik.http.services.server_.loadbalancer.server.port=80"
 networks:
   c-r: {}
   s-r: {}

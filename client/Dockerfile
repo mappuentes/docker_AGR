@@ -1,0 +1,8 @@
+FROM ubuntu:22.04
+
+# Run the command to install the required packages
+RUN apt-get update && apt-get install -y iputils-ping
+
+
+# Execute apache in foreground as default
+CMD ["/bin/bash"]
