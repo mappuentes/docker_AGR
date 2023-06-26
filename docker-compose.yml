@@ -1,22 +1,14 @@
 version: '3'
 services:
   router:
-    image: traefik:v2.5
-    # Enables the web UI and tells Traefik to listen to docker
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
     command: 
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      # The HTTP port
-      - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
-    volumes:
-      # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
+      #- "sleep 1d" change this in:
+      #  - "tail -f /dev/null" #doesn't work for the same reason
+      - "/bin/sleep"
+      - "infinity"
     networks:
       - c-r
       - s-r
