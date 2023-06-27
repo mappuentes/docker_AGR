@@ -2,41 +2,33 @@ version: '3'
 services:
   router:
     build: 
-      context: ./client
-      dockerfile: Dockerfile
+      context: ./router
+      dockerfile: Dockerfile_router
     command: 
-      #- "sleep 1d" change this in:
-      #  - "tail -f /dev/null" #doesn't work for the same reason
       - "/bin/sleep"
       - "infinity"
     networks:
       - c-r
       - s-r
+
   client:
     build: 
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_client
     command: 
-      #- "sleep 1d" change this in:
-      #  - "tail -f /dev/null" #doesn't work for the same reason
       - "/bin/sleep"
       - "infinity"  
     networks:
       - c-r     
+
   server_:
     image: node:16.20.0-alpine3.18
     command: 
-      #- "sleep 1d" change this in:
-      #- "tail -f /dev/null" #or
       - "/bin/sleep"
       - "infinity"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.server_.rule=Host(`node.localhost`)"
-      - "traefik.http.routers.server_.entrypoints=web"
-      - "traefik.http.services.server_.loadbalancer.server.port=80"
     networks:
       - s-r
+
 networks:
   c-r: {}
   s-r: {}
