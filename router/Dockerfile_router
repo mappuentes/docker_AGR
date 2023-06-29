@@ -2,15 +2,16 @@ FROM ubuntu:22.04
 
 # Run the command to install the required packages
 RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2 && apt-get install -y frr coreutils
-#RUN echo "!/etc/frr/frr.conf" > /etc/frr/frr.conf && echo "frr version 7.5" >> /etc/frr/frr.conf && \
-#    echo "frr defaults traditional" >> /etc/frr/frr.conf && echo "frr defaults traditional" >> /etc/frr/frr.conf && \
-#    echo "router ospf" >> /etc/frr/frr.conf && echo "  redistribute connected" >> /etc/frr/frr.conf && \
-#    echo "log syslog informational" >> log syslog informational
-RUN sed -i 's/^bgpd_options=.*/bgpd_options=" -A 127.0.0.1 --daemon"/' /etc/frr/daemons && \
+
+RUN sed -i 's/^bgpd_options=.*/bgpd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons && \
     sed -i 's/^zebra_options=.*/zebra_options=" -s 90000000 --daemon -A 127.0.0.1"/' /etc/frr/daemons && \    
-    sed -i 's/^bgpd=.*/bgpd=yes/' /etc/frr/daemons
-RUN echo "zebrasrv 2600/tcp" > services && echo "zebra 2601/tcp" >> services && echo "bgpd 2605/tcp" >> services
+    sed -i 's/^bgpd=.*/bgpd=yes/' /etc/frr/daemons && sed -i 's/^ospfd=.*/ospfd=yes/' /etc/frr/daemons &&\
+    sed -i 's/^zebra=.*/zebra=yes/' /etc/frr/daemons && \
+    sed -i 's/^zebra_options=.*/ospfd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons    
+RUN echo "zebrasrv 2600/tcp" > services && echo "zebra 2601/tcp" >> services && echo "bgpd 2605/tcp" >> services \
+    && echo "ospfd 2604/tcp" >> services
 RUN service frr start
+
 
 # Execute apache in foreground as default
 CMD ["/bin/bash"]
