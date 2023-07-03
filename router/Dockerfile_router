@@ -7,9 +7,9 @@ RUN sed -i 's/^bgpd_options=.*/bgpd_options="  --daemon -A 127.0.0.1"/' /etc/frr
     sed -i 's/^zebra_options=.*/zebra_options=" -s 90000000 --daemon -A 127.0.0.1"/' /etc/frr/daemons && \    
     sed -i 's/^bgpd=.*/bgpd=yes/' /etc/frr/daemons && sed -i 's/^ospfd=.*/ospfd=yes/' /etc/frr/daemons &&\
     sed -i 's/^zebra=.*/zebra=yes/' /etc/frr/daemons && \
-    sed -i 's/^zebra_options=.*/ospfd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons    
-RUN echo "zebrasrv 2600/tcp" > services && echo "zebra 2601/tcp" >> services && echo "bgpd 2605/tcp" >> services \
-    && echo "ospfd 2604/tcp" >> services
+    sed -i 's/^ospfd_options=.*/ospfd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons    
+RUN echo "zebrasrv 2600/tcp" > /etc/services && echo "zebra 2601/tcp" >> /etc/services && echo "bgpd 2605/tcp" >> /etc/services \
+    && echo "ospfd 2604/tcp" >> /etc/services
 RUN service frr start
 
 
