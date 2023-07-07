@@ -4,31 +4,53 @@ services:
     build: 
       context: ./router
       dockerfile: Dockerfile_router
+    cap_add:
+      - NET_ADMIN
+    privileged: true
     command: 
       - "/bin/sleep"
       - "infinity"
     networks:
-      - c-r
-      - s-r
+      c-r:
+        ipv4_address: 172.16.1.2
+      s-r:
+        ipv4_address: 172.16.0.2
 
   client:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    cap_add:
+      - NET_ADMIN
+    privileged: true
     command: 
       - "/bin/sleep"
       - "infinity"  
     networks:
-      - c-r     
-
+      c-r:
+        ipv4_address: 172.16.1.10
+#for the server do the same as the client. Later try to install node
   server_:
-    image: node:16.20.0-alpine3.18
-    command: 
+    image: ubuntu:22.04
+    command:
+      #- "ip route add 172.16.1.0/24 via 172.16.0.2" 
       - "/bin/sleep"
       - "infinity"
+    cap_add:
+      - NET_ADMIN
+    privileged: true
     networks:
-      - s-r
+      s-r:
+        ipv4_address: 172.16.0.10
 
 networks:
-  c-r: {}
-  s-r: {}
+  c-r:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
+  s-r:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
