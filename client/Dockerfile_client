@@ -1,9 +1,11 @@
 FROM ubuntu:22.04
 
-# Run the command to install the required packages
-RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2
+# Run the command to install the required packages. This command adds a layer to the image.
+RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2 
+#the packet installed are the one util to add a route or ping a node.
 
-#RUN ip route add 172.16.0.0/24 via 172.16.1.2 
+#once started the clint run this command to make the route to the server network passing through the router:
+#ip route add 172.16.0.0/24 via 172.16.1.2 
 
 
 # Execute apache in foreground as default

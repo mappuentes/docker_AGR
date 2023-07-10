@@ -1,0 +1,15 @@
+FROM ubuntu:22.04
+#FROM node:16.20.0-alpine3.18
+
+#FROM traefik:latest
+
+# Run the command to install the required packages
+RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2 coreutils iptables nodejs npm
+   # && apt-get install -y frr
+
+
+CMD ["/bin/bash"]
+
+
+
+

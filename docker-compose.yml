@@ -4,6 +4,7 @@ services:
     build: 
       context: ./router
       dockerfile: Dockerfile_router
+    #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
     cap_add:
       - NET_ADMIN
     privileged: true
@@ -29,7 +30,19 @@ services:
     networks:
       c-r:
         ipv4_address: 172.16.1.10
-#for the server do the same as the client. Later try to install node
+  temp:
+    build: 
+      context: ./temp
+      dockerfile: Dockerfile_temp
+    cap_add:
+      - NET_ADMIN
+    privileged: true
+    command: 
+      - "/bin/sleep"
+      - "infinity"  
+    networks:
+      s-r:
+        ipv4_address: 172.16.0.11
   server_:
     image: ubuntu:22.04
     command:
