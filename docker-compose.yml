@@ -1,6 +1,6 @@
 version: '3'
 services:
-  router:
+  router1:
     build: 
       context: ./router
       dockerfile: Dockerfile_router
@@ -12,9 +12,26 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      c-r:
+      clientSide:
         ipv4_address: 172.16.1.2
-      s-r:
+      internalNet:
+        ipv4_address: 172.16.2.2
+
+  router2:
+    build: 
+      context: ./router
+      dockerfile: Dockerfile_router
+    #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
+    cap_add:
+      - NET_ADMIN
+    privileged: true
+    command: 
+      - "/bin/sleep"
+      - "infinity"
+    networks:
+      internalNet:
+        ipv4_address: 172.16.2.3
+      serverSide:
         ipv4_address: 172.16.0.2
 
   client:
@@ -28,8 +45,9 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      c-r:
+      clientSide:
         ipv4_address: 172.16.1.10
+
   temp:
     build: 
       context: ./temp
@@ -41,8 +59,9 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      s-r:
+      serverSide:
         ipv4_address: 172.16.0.11
+
   server_:
     image: ubuntu:22.04
     command:
@@ -53,17 +72,22 @@ services:
       - NET_ADMIN
     privileged: true
     networks:
-      s-r:
+      serverSide:
         ipv4_address: 172.16.0.10
 
 networks:
-  c-r:
+  clientSide:
     driver: bridge
     ipam:
       config:
         - subnet: 172.16.1.0/24
-  s-r:
+  serverSide:
     driver: bridge
     ipam:
       config:
         - subnet: 172.16.0.0/24
+  internalNet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.2.0/24
