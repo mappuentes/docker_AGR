@@ -1,5 +1,6 @@
 version: '3'
 services:
+  #to add a new router copy and paste this configuration. Define its ip address and assign a network consistenlty with the architecture required
   router1:
     build: 
       context: ./router
@@ -8,6 +9,7 @@ services:
     cap_add:
       - NET_ADMIN
     privileged: true
+    #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"
@@ -25,6 +27,7 @@ services:
     cap_add:
       - NET_ADMIN
     privileged: true
+    #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"
@@ -38,9 +41,10 @@ services:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    #privedges for network needed to add a new ip route
     cap_add:
       - NET_ADMIN
-    privileged: true
+    #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
@@ -54,7 +58,8 @@ services:
       dockerfile: Dockerfile_temp
     cap_add:
       - NET_ADMIN
-    privileged: true
+    #privileged: true
+    #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
@@ -64,13 +69,14 @@ services:
 
   server_:
     image: ubuntu:22.04
+    #put the container in a loop in order to access it with bash
     command:
       #- "ip route add 172.16.1.0/24 via 172.16.0.2" 
       - "/bin/sleep"
       - "infinity"
     cap_add:
       - NET_ADMIN
-    privileged: true
+    #privileged: true
     networks:
       serverSide:
         ipv4_address: 172.16.0.10

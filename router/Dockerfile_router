@@ -1,10 +1,9 @@
 FROM ubuntu:22.04
 
-#FROM traefik:latest
 
 # Run the command to install the required packages
 RUN apt-get update && apt-get install -y iputils-ping && apt-get install -y iproute2 coreutils iptables && apt-get install -y frr
-
+#configure frr enabling daemon and setting ports
 RUN sed -i 's/^bgpd_options=.*/bgpd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons && \
     sed -i 's/^zebra_options=.*/zebra_options=" -s 90000000 --daemon -A 127.0.0.1"/' /etc/frr/daemons && \    
     sed -i 's/^bgpd=.*/zebra=yes\nbgpd=yes/' /etc/frr/daemons && sed -i 's/^ospfd=.*/ospfd=yes/' /etc/frr/daemons &&\
@@ -12,15 +11,15 @@ RUN sed -i 's/^bgpd_options=.*/bgpd_options="  --daemon -A 127.0.0.1"/' /etc/frr
     sed -i 's/^ospfd_options=.*/ospfd_options="  --daemon -A 127.0.0.1"/' /etc/frr/daemons    
 RUN echo "zebrasrv 2600/tcp" > /etc/services && echo "zebra 2601/tcp" >> /etc/services && echo "bgpd 2605/tcp" >> /etc/services \
     && echo "ospfd 2604/tcp" >> /etc/services
-
+#allow ipforwarding
 RUN sed -i 's/^#net.ipv4.ip_forward=1.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf && \
     sed -i 's/^#net.ipv6.conf.all.forwarding=1.*/net.ipv6.conf.all.forwarding=1/' /etc/sysctl.conf && sysctl -p
+
+
 #RUN apt install traceroute
-RUN service frr start
 #RUN iptables -P FORWARD ACCEPT && iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 
 #RUN echo 1 > /proc/sys/net/ipv4/ip_forward && echo 1 > /proc/sys/net/ipv6/conf/all/forwarding 
-# Execute apache in foreground as default
 CMD ["/bin/bash"]
 
 
