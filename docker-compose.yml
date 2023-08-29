@@ -1,23 +1,51 @@
 version: '3'
 services:
   #to add a new router copy and paste this configuration. Define its ip address and assign a network consistenlty with the architecture required
+  fluentd:
+    image: fluent/fluentd:v1.12-1
+    volumes:
+      - ./fluentd:/fluentd/etc 
+      - ./fluentd/shared-volume:/shared-volume
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    networks:
+      default:
+        ipv4_address: 172.16.10.2
+    #or docker run -v ./fluentd:/fluentd/etc fluent/fluentd:v1.12 
   router1:
     build: 
       context: ./router
       dockerfile: Dockerfile_router
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
+    depends_on:
+      - fluentd
+    volumes:
+      - ./fluentd/shared-volume:/shared-volume
     cap_add:
       - NET_ADMIN
     privileged: true
+    #links establishes a link to the fluentd service enabling communication with that container
+    links:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.16.10.2:24224
+        tag: frr.router1
+        fluentd-async: 'true'
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"
     networks:
+      default:
+        ipv4_address: 172.16.10.10
       clientSide:
         ipv4_address: 172.16.1.2
       internalNet:
         ipv4_address: 172.16.2.2
+    
 
   router2:
     build: 
@@ -80,6 +108,8 @@ services:
     networks:
       serverSide:
         ipv4_address: 172.16.0.10
+  
+  
 
 networks:
   clientSide:
@@ -97,3 +127,8 @@ networks:
     ipam:
       config:
         - subnet: 172.16.2.0/24
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.10.0/24
