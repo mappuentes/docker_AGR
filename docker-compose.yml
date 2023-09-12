@@ -2,17 +2,24 @@ version: '3'
 services:
   #to add a new router copy and paste this configuration. Define its ip address and assign a network consistenlty with the architecture required
   fluentd:
-    image: fluent/fluentd:v1.12-1
+    build: 
+      context: ./fluentd
+      dockerfile: Dockerfile_fluentd
     volumes:
-      - ./fluentd:/fluentd/etc 
+      - ./fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf 
       - ./fluentd/shared-volume:/shared-volume
+      - ./fluentd/output:/fluentd/output/
     ports:
       - "24224:24224"
       - "24224:24224/udp"
+      - "5140/tcp"
+    command: 
+      - "/bin/sleep"
+      - "infinity"
     networks:
       default:
         ipv4_address: 172.16.10.2
-    #or docker run -v ./fluentd:/fluentd/etc fluent/fluentd:v1.12 
+    #or docker run -v ./fluentd:/fluentd/etc fluent/fluentd:v1.12
   router1:
     build: 
       context: ./router
@@ -31,7 +38,7 @@ services:
     logging:
       driver: "fluentd"
       options:
-        fluentd-address: 172.16.10.2:24224
+        fluentd-address: localhost:24224
         tag: frr.router1
         fluentd-async: 'true'
     #put the container in a loop in order to access it with bash

@@ -36,7 +36,14 @@ which means all the frr daemons chosen are running.
 ```
 which means all the frr daemons chosen are running.
 7. Now it's necessary to configure the protocol for both the router. Enter the vty bash with the command "vtysh". Enter the configuration with "conf t" and then the conf of the router "router ospf". Finally, insert the network connected to the router into the same area with "network <xx.xx.xx.xx/xx> area <x>".
-     - router1: "network 172.16.2.0/24 area 0" "network 172.16.1.0/24 area 0"
+     - router1: "network 172.16.2.0/24 area 0" "network 172.16.1.0/24 area 0" ( in conf t -> log file shared-volume/frr/frr.log )
+        ***service frr start
+        vtysh
+        conf t
+        log file shared-volume/frr/frr.log
+        router ospf 
+        network 172.16.2.0/24 area 0
+        network 172.16.1.0/24 area 0***
      - router2: "network 172.16.2.0/24 area 0" "network 172.16.0.0/24 area 0"
      Finish this operation with "end"
 After this operation, thanks to the daemon of ospf, the routers are going to exchange their routing tables. Verify it with the command "show ip route" that should give:

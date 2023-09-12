@@ -14,7 +14,8 @@ RUN echo "zebrasrv 2600/tcp" > /etc/services && echo "zebra 2601/tcp" >> /etc/se
 #allow ipforwarding
 RUN sed -i 's/^#net.ipv4.ip_forward=1.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf && \
     sed -i 's/^#net.ipv6.conf.all.forwarding=1.*/net.ipv6.conf.all.forwarding=1/' /etc/sysctl.conf && sysctl -p
-
+#redirect allthelogs.allSeverity to fluentd node
+RUN echo "*.* localhost:24224" >> /etc/rsyslog.conf
 
 #RUN apt install traceroute
 #RUN iptables -P FORWARD ACCEPT && iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
