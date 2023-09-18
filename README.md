@@ -40,11 +40,18 @@ which means all the frr daemons chosen are running.
         ***service frr start
         vtysh
         conf t
-        log file shared-volume/frr/frr.log
+        log file shared-volume/frr/frr.log #need to be already present before this command
         router ospf 
         network 172.16.2.0/24 area 0
-        network 172.16.1.0/24 area 0***
+        network 172.16.1.0/24 area 0
+        end***
      - router2: "network 172.16.2.0/24 area 0" "network 172.16.0.0/24 area 0"
+        conf t
+        router ospf
+        network 172.16.2.0/24 area 0
+        network 172.16.0.0/24 area 0
+        end
+
      Finish this operation with "end"
 After this operation, thanks to the daemon of ospf, the routers are going to exchange their routing tables. Verify it with the command "show ip route" that should give:
 - router1:

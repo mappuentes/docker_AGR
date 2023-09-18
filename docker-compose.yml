@@ -5,6 +5,8 @@ services:
     build: 
       context: ./fluentd
       dockerfile: Dockerfile_fluentd
+    privileged: true
+    entrypoint: sh -c "/ep_fluentd.sh"
     volumes:
       - ./fluentd/conf/fluent.conf:/fluentd/etc/fluent.conf 
       - ./fluentd/shared-volume:/shared-volume
@@ -20,26 +22,30 @@ services:
       default:
         ipv4_address: 172.16.10.2
     #or docker run -v ./fluentd:/fluentd/etc fluent/fluentd:v1.12
+  
+  
   router1:
+    hostname: router1
     build: 
       context: ./router
       dockerfile: Dockerfile_router
+    entrypoint: entrypoints/ep_router1.sh
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
-    depends_on:
-      - fluentd
-    volumes:
-      - ./fluentd/shared-volume:/shared-volume
     cap_add:
       - NET_ADMIN
     privileged: true
+    volumes:
+      - ./fluentd/shared-volume:/shared-volume
+    depends_on:
+      - fluentd
     #links establishes a link to the fluentd service enabling communication with that container
     links:
       - fluentd
     logging:
       driver: "fluentd"
       options:
-        fluentd-address: localhost:24224
-        tag: frr.router1
+        fluentd-address: 172.16.10.2:24224
+        tag: router1
         fluentd-async: 'true'
     #put the container in a loop in order to access it with bash
     command: 
@@ -55,13 +61,28 @@ services:
     
 
   router2:
+    hostname: router2
     build: 
       context: ./router
       dockerfile: Dockerfile_router
+    entrypoint: entrypoints/ep_router2.sh
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
     cap_add:
       - NET_ADMIN
     privileged: true
+    volumes:
+      - ./fluentd/shared-volume:/shared-volume
+    depends_on:
+      - fluentd
+    #links establishes a link to the fluentd service enabling communication with that container
+    links:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.16.10.2:24224
+        tag: router2
+        fluentd-async: 'true'
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
@@ -94,6 +115,19 @@ services:
     cap_add:
       - NET_ADMIN
     #privileged: true
+    volumes:
+      - ./fluentd/shared-volume:/shared-volume
+    depends_on:
+      - fluentd
+    #links establishes a link to the fluentd service enabling communication with that container
+    links:
+      - fluentd
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.16.10.2:24224
+        tag: temp_server
+        fluentd-async: 'true'
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
