@@ -6,6 +6,9 @@ The routers have been set t0 work with the protocol ospf. For sake of semplicity
 
 ![architecture](./images/architecture_temp2.png)
 
+##NEW VERSION
+run with docker-compose and check the folder fluentd/output (should have all the logs of the system). If the system doesn't work is due to an automatic conversion that git has done. Convert the bash file in /fluentd and /router/entrypoints from CRLF to LF and run again (take care to delete the images of router1, router2 and fluentd before running again).
+
 To run the system:
 1. run the docker engine (tested: by running docker desktop)
 2. launch the command "docker-compose up -d"
