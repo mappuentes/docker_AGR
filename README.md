@@ -3,14 +3,18 @@
 The system is composed by a client (ubuntu 22.04 with iputils-ping and iproute2), 2 server (server_: ubuntu 22.04; temp: ubuntu 22.04 with iputils-ping, iproute2, nodejs, npm and other packet that still have their usefullness to be checked) and 2 routers (ubuntu 22.04 with iputils-ping, iproute2, coreutils, iptables, frr).
 The routers have been set t0 work with the protocol ospf. For sake of semplicity, in this phase, the entire architecture have been inserted in a single area (area 0).
 
+To collect the logs produced by all the nodes of the system is used fluentd. It's possible to reach the final collection in fluentd/output.
 
 ![architecture](./images/architecture_temp2.png)
 
 ##NEW VERSION
 run with docker-compose and check the folder fluentd/output (should have all the logs of the system). If the system doesn't work is due to an automatic conversion that git has done. Convert the bash file in /fluentd and /router/entrypoints from CRLF to LF and run again (take care to delete the images of router1, router2 and fluentd before running again).
+The steps after 4 shave been automatized with bash scripts (entrypoints).
 
+##OLD VERSION 
+The old version is left to take note of the command used to check all the steps.
 To run the system:
-1. run the docker engine (tested: by running docker desktop)
+1. run the docker engine, by running docker desktop(tested)
 2. launch the command "docker-compose up -d"
 3. access the server temp "docker exec -it intelligent-forensics-temp-1 bash". Add the route to the client network "ip route add 172.16.1.0/24 via 172.16.0.2", in which 172.16.0.2 is the interface of the router connected to the server (router2).
 4. in another terminal, access the client "docker exec -it intelligent-forensics-client-1 bash". Add the route to the server network "ip route add 172.16.0.0/24 via 172.16.1.2", in which 172.16.1.2 is the interface of the router connected to the client (router1). Test the connection "ping 172.16.0.11" by pinging the server temp: it should fail:
@@ -38,22 +42,54 @@ which means all the frr daemons chosen are running.
  * Status of staticd: running
 ```
 which means all the frr daemons chosen are running.
-7. Now it's necessary to configure the protocol for both the router. Enter the vty bash with the command "vtysh". Enter the configuration with "conf t" and then the conf of the router "router ospf". Finally, insert the network connected to the router into the same area with "network <xx.xx.xx.xx/xx> area <x>".
-     - router1: "network 172.16.2.0/24 area 0" "network 172.16.1.0/24 area 0" ( in conf t -> log file shared-volume/frr/frr.log )
-        ***service frr start
+7. --FAST WAY--
+- router1:
+        service syslog-ng start
+        service frr start
         vtysh
         conf t
-        log file shared-volume/frr/frr.log #need to be already present before this command
+        log file shared-volume/frr/frr1.log #need to be already present before this command
+        router ospf 
+        network 172.16.2.0/24 area 0
+        network 172.16.1.0/24 area 0
+        end
+        exit
+- router2: 
+        service syslog-ng start
+        service frr start
+        vtysh
+        conf t
+        log file shared-volume/frr/frr1.log
+        router ospf
+        network 172.16.2.0/24 area 0
+        network 172.16.0.0/24 area 0
+        end
+        exit
+Now it's necessary to configure the protocol for both the router. Enter the vty bash with the command "vtysh". Enter the configuration with "conf t" and then the conf of the router "router ospf". Finally, insert the network connected to the router into the same area with "network <xx.xx.xx.xx/xx> area <x>".
+     - router1: "network 172.16.2.0/24 area 0" "network 172.16.1.0/24 area 0" ( in conf t -> log file shared-volume/frr/frr.log )
+
+        ***
+        service syslog-ng start
+        service frr start
+        vtysh
+        conf t
+        log file shared-volume/frr/frr1.log #need to be already present before this command
         router ospf 
         network 172.16.2.0/24 area 0
         network 172.16.1.0/24 area 0
         end***
      - router2: "network 172.16.2.0/24 area 0" "network 172.16.0.0/24 area 0"
+        ***
+        service syslog-ng start
+        service frr start
+        vtysh
         conf t
+        log file shared-volume/frr/frr1.log
         router ospf
         network 172.16.2.0/24 area 0
         network 172.16.0.0/24 area 0
         end
+        ***
 
      Finish this operation with "end"
 After this operation, thanks to the daemon of ospf, the routers are going to exchange their routing tables. Verify it with the command "show ip route" that should give:
