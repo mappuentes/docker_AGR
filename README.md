@@ -7,11 +7,11 @@ To collect the logs produced by all the nodes of the system is used fluentd. It'
 
 ![architecture](./images/architecture_temp2.png)
 
-##NEW VERSION
+## NEW VERSION
 run with docker-compose and check the folder fluentd/output (should have all the logs of the system). If the system doesn't work is due to an automatic conversion that git has done. Convert the bash file in /fluentd and /router/entrypoints from CRLF to LF and run again (take care to delete the images of router1, router2 and fluentd before running again).
 The steps after 4 shave been automatized with bash scripts (entrypoints).
 
-##OLD VERSION 
+## OLD VERSION 
 The old version is left to take note of the command used to check all the steps.
 To run the system:
 1. run the docker engine, by running docker desktop(tested)
@@ -32,7 +32,7 @@ From 172.16.1.2 icmp_seq=4 Redirect Host(New nexthop: 172.16.1.1)
  * Status of ospfd: running
  * Status of staticd: running
 ```
-which means all the frr daemons chosen are running.
+    this means that all the frr daemons chosen are running.
 6. access the router2 "docker exec -it intelligent-forensics-router2-1 bash". Start frr "service frr start" and check its status "service frr status" is:
 ```console
  * Status of watchfrr: running
@@ -41,8 +41,9 @@ which means all the frr daemons chosen are running.
  * Status of ospfd: running
  * Status of staticd: running
 ```
-which means all the frr daemons chosen are running.
-7. --FAST WAY--
+    this means that all the frr daemons chosen are running.
+7. 
+-- FAST and complete WAY  --
 - router1:
         service syslog-ng start
         service frr start
@@ -65,6 +66,7 @@ which means all the frr daemons chosen are running.
         network 172.16.0.0/24 area 0
         end
         exit
+-- incomplete -- to be deleted
 Now it's necessary to configure the protocol for both the router. Enter the vty bash with the command "vtysh". Enter the configuration with "conf t" and then the conf of the router "router ospf". Finally, insert the network connected to the router into the same area with "network <xx.xx.xx.xx/xx> area <x>".
      - router1: "network 172.16.2.0/24 area 0" "network 172.16.1.0/24 area 0" ( in conf t -> log file shared-volume/frr/frr.log )
 
