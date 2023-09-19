@@ -8,8 +8,8 @@ To collect the logs produced by all the nodes of the system is used fluentd. It'
 ![architecture](./images/architecture_temp2.png)
 
 ## NEW VERSION
-run with docker-compose and check the folder fluentd/output (should have all the logs of the system). If the system doesn't work is due to an automatic conversion that git has done. Convert the bash file in /fluentd and /router/entrypoints from CRLF to LF and run again (take care to delete the images of router1, router2 and fluentd before running again).
-The steps after 4 shave been automatized with bash scripts (entrypoints).
+Run with docker-compose and check the folder fluentd/output for all the logs of the system.
+The steps after 4 shave been automatized with bash scripts (entrypoints), so there is no need to perform those operation
 
 ## OLD VERSION 
 The old version is left to take note of the command used to check all the steps.
