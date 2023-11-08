@@ -11,3 +11,10 @@ fiware	-> look for it
 ebpf to extract info of ubuntu network directly from kernel (es info from network port).
 
 
+NNNNEWWW
+- analyze dataset
+- understand how to recognize DDoS and all the possibilityies
+- choose an AI algorithm
+- implement algo
+- adapt my system to super-computing model
+- retrieve the same type of data from my system
