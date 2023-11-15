@@ -24,3 +24,48 @@
 2023/11/06 17:55:15 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.2.3 Negotiation done (Master).
 2023/11/06 17:55:25 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.3
 2023/11/06 17:55:25 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.2
+2023/11/08 14:16:02 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.20
+2023/11/08 14:16:02 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.20
+2023/11/08 14:16:02 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.1.20
+2023/11/08 14:16:02 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.1.20
+2023/11/08 14:16:02 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.20
+2023/11/08 14:16:02 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.20
+2023/11/08 14:16:02 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 172.16.2.2
+2023/11/08 14:16:02 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.2.20
+2023/11/08 14:16:02 OSPF: [RY794-DQ7AK] interface 172.16.2.20 [70] join AllDRouters Multicast group.
+2023/11/08 14:16:02 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.1.20
+2023/11/08 14:16:02 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.1.20
+2023/11/08 14:16:02 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 172.16.1.2
+2023/11/08 14:16:02 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.1.20
+2023/11/08 14:16:02 OSPF: [RY794-DQ7AK] interface 172.16.1.20 [64] join AllDRouters Multicast group.
+2023/11/08 14:16:02 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.2.3 Negotiation done (Master).
+2023/11/08 14:16:02 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.2
+2023/11/08 14:16:02 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.20
+2023/11/08 14:16:02 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 172.16.2.2
+2023/11/08 14:16:02 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.2.20
+2023/11/08 14:16:02 OSPF: [RY794-DQ7AK] interface 172.16.2.2 [68] join AllDRouters Multicast group.
+2023/11/08 14:16:02 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.10.10 Negotiation done (Master).
+2023/11/08 14:16:02 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.2.3 Negotiation done (Master).
+2023/11/08 14:16:02 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.10.10 Negotiation done (Master).
+2023/11/08 14:16:12 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.2
+2023/11/08 14:16:12 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.20
+2023/11/08 14:16:12 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.1.2
+2023/11/08 14:16:12 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.1.20
+2023/11/08 14:16:12 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 172.16.1.2
+2023/11/08 14:16:12 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.1.20
+2023/11/08 14:16:12 OSPF: [RY794-DQ7AK] interface 172.16.1.2 [60] join AllDRouters Multicast group.
+2023/11/08 14:16:22 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.1.2
+2023/11/08 14:16:22 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.1.20
+2023/11/15 12:07:01 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.2
+2023/11/15 12:07:01 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.2
+2023/11/15 12:07:01 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 172.16.2.3
+2023/11/15 12:07:01 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.2.2
+2023/11/15 12:07:01 OSPF: [RY794-DQ7AK] interface 172.16.2.2 [94] join AllDRouters Multicast group.
+2023/11/15 12:07:01 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.1.2
+2023/11/15 12:07:01 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.1.2
+2023/11/15 12:07:01 OSPF: [H01MF-RN00N] DR-Election[2nd]: Backup 0.0.0.0
+2023/11/15 12:07:01 OSPF: [R7BJ4-KP8JT] DR-Election[2nd]: DR     172.16.1.2
+2023/11/15 12:07:01 OSPF: [RY794-DQ7AK] interface 172.16.1.2 [88] join AllDRouters Multicast group.
+2023/11/15 12:07:01 OSPF: [S5PCG-77H23] Packet[DD]: Neighbor 172.16.2.3 Negotiation done (Master).
+2023/11/15 12:07:11 OSPF: [P4PQ9-K4XFD] DR-Election[1st]: Backup 172.16.2.3
+2023/11/15 12:07:11 OSPF: [HBZ7F-65Y86] DR-Election[1st]: DR     172.16.2.2

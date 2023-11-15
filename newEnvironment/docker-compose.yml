@@ -36,7 +36,7 @@ services:
     #privileged: true
     #shared-volumes between fluentd and the host
     volumes:
-      - ./fluentd/shared-volume:/shared-volume
+      - ./professor-fluentd/shared-volume:/shared-volume
     depends_on:
       - professor-fluentd
     #links establishes a link to the fluentd service enabling communication with that container
@@ -93,11 +93,11 @@ services:
       - "infinity"
     networks:
       servidor-system:
-        ipv4_address: 10.100.0.1
+        ipv4_address: 10.100.0.10
       professor-system:
-        ipv4_address: 10.200.0.1
+        ipv4_address: 10.200.0.10
       RA-RB:
-        ipv4_address: 10.1.0.1
+        ipv4_address: 10.1.0.10
 
   rb_router:
     hostname: RBrouter
@@ -133,11 +133,11 @@ services:
       - "infinity"
     networks:
       RA-RB:
-        ipv4_address: 10.1.0.2
+        ipv4_address: 10.1.0.20
       RB-RC_left:
-        ipv4_address: 10.2.0.1
+        ipv4_address: 10.2.0.10
       RB-RD_right:
-        ipv4_address: 10.3.0.1
+        ipv4_address: 10.3.0.10
 
   rc_router:
     hostname: RCrouter
@@ -173,11 +173,12 @@ services:
       - "infinity"
     networks:
       RB-RC_left:
-        ipv4_address: 10.2.0.2
+        ipv4_address: 10.2.0.20
       RCnet_left:
-        ipv4_address: 10.0.1.1
+        ipv4_address: 10.0.1.10
       RCnet_right:
-        ipv4_address: 10.0.2.1
+        ipv4_address: 10.0.2.10
+      
 
   rd_router:
     hostname: RDrouter
@@ -213,75 +214,89 @@ services:
       - "infinity"
     networks:
       RB-RD_right:
-        ipv4_address: 10.3.0.2
+        ipv4_address: 10.3.0.20
       RDnet_left:
-        ipv4_address: 10.0.3.1
+        ipv4_address: 10.0.3.10
       RDnet_right:
-        ipv4_address: 10.0.4.1
+        ipv4_address: 10.0.4.10
+
 
   red1:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    entrypoint: entrypoints/ep_red1.sh
     #privedges for network needed to add a new ip route
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - rc_router
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
     networks:
       RCnet_left:
-        ipv4_address: 10.0.1.2
+        ipv4_address: 10.0.1.20
   red2:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    entrypoint: entrypoints/ep_red2.sh
     #privedges for network needed to add a new ip route
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - rc_router
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
     networks:
       RCnet_right:
-        ipv4_address: 10.0.2.2
+        ipv4_address: 10.0.2.20
   red3:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    entrypoint: entrypoints/ep_red3.sh
+
     #privedges for network needed to add a new ip route
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - rd_router
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
     networks:
       RDnet_left:
-        ipv4_address: 10.0.3.2
+        ipv4_address: 10.0.3.20
   red4:
     build: 
       context: ./client
       dockerfile: Dockerfile_client
+    entrypoint: entrypoints/ep_red4.sh 
     #privedges for network needed to add a new ip route
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - rd_router
     #put the container in a loop in order to access it with bash
     command: 
       - "/bin/sleep"
       - "infinity"  
     networks:
       RDnet_right:
-        ipv4_address: 10.0.4.2
+        ipv4_address: 10.0.4.20
   
 networks:
   professor-system:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.200.0.0/30
+        - subnet: 10.200.0.0/24
   servidor-system:
     driver: bridge
     ipam:
@@ -291,17 +306,17 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.1.0.0/30
+        - subnet: 10.1.0.0/24
   RB-RC_left:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.2.0.0/30
+        - subnet: 10.2.0.0/24
   RB-RD_right:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.3.0.0/30
+        - subnet: 10.3.0.0/24
   RCnet_left:
     driver: bridge
     ipam:

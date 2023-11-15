@@ -14,7 +14,7 @@ services:
       - ./fluentd/shared-volume:/shared-volume
       - ./fluentd/output:/fluentd/output/
     #hostPort:containerPort
-    #indicates a connection between these 2 ports
+    #indicates a connection between these 2 ports but it works also without this block
     ports:
       - "24224:24224"
       - "24224:24224/udp"
@@ -105,6 +105,46 @@ services:
         ipv4_address: 172.16.2.3
       serverSide:
         ipv4_address: 172.16.0.2
+
+  router3:
+    hostname: router3
+    build: 
+      context: ./router
+      dockerfile: Dockerfile_router
+    #the container as first instruction executes the entrypoint
+    #entrypoint: entrypoints/ep_router1.sh
+    #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
+    cap_add:
+      - NET_ADMIN
+    privileged: true
+    #shared-volumes between fluentd and the host
+    volumes:
+      - ./fluentd/shared-volume:/shared-volume
+    #Started after fluentd (that should collect all the logs)
+    depends_on:
+      - fluentd
+    #links establishes a link to the fluentd service enabling communication with that container
+    links:
+      - fluentd
+    #set as logging driver fluentd (to check if it's actually needed)
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 172.16.10.2:24224
+        tag: router1
+        #makes the execution non-blocking
+        fluentd-async: 'true'
+    #put the container in a loop in order to access it with bash
+    command: 
+      - "/bin/sleep"
+      - "infinity"
+    networks:
+      default:
+        ipv4_address: 172.16.10.20
+      clientSide:
+        ipv4_address: 172.16.1.20
+      internalNet:
+        ipv4_address: 172.16.2.20
 
   client:
     build: 
