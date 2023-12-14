@@ -24,13 +24,15 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      professor-system:
+      professor-system1:
         ipv4_address: 10.200.0.2
   
   servidor:
     build: 
       context: ./servidor
       dockerfile: Dockerfile_servidor
+    #iniciar servidor web
+    entrypoint: entrypoints/ep_servidor.sh
     cap_add:
       - NET_ADMIN
     #privileged: true
@@ -39,6 +41,8 @@ services:
       - ./professor-fluentd/shared-volume:/shared-volume
     depends_on:
       - professor-fluentd
+    ports:
+      - "3001:3001"
     #links establishes a link to the fluentd service enabling communication with that container
     #Started after fluentd (that should collect all the logs)
     links:
@@ -56,7 +60,7 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      servidor-system:
+      servidor-system1:
         ipv4_address: 10.100.0.2
       
   ra_router:
@@ -92,18 +96,18 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      servidor-system:
+      servidor-system1:
         ipv4_address: 10.100.0.10
-      professor-system:
+      professor-system1:
         ipv4_address: 10.200.0.10
-      RA-RB:
+      RA-RB1:
         ipv4_address: 10.1.0.10
 
   rb_router:
     hostname: RBrouter
     build: 
       context: ./router
-      dockerfile: Dockerfile_router_A
+      dockerfile: Dockerfile_router_B
     #the container as first instruction executes the entrypoint
     entrypoint: entrypoints/ep_routerB.sh
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
@@ -132,18 +136,18 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      RA-RB:
+      RA-RB1:
         ipv4_address: 10.1.0.20
-      RB-RC_left:
+      RB-RC_left1:
         ipv4_address: 10.2.0.10
-      RB-RD_right:
+      RB-RD_right1:
         ipv4_address: 10.3.0.10
 
   rc_router:
     hostname: RCrouter
     build: 
       context: ./router
-      dockerfile: Dockerfile_router_A
+      dockerfile: Dockerfile_router_C
     #the container as first instruction executes the entrypoint
     entrypoint: entrypoints/ep_routerC.sh
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
@@ -172,11 +176,11 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      RB-RC_left:
+      RB-RC_left1:
         ipv4_address: 10.2.0.20
-      RCnet_left:
+      RCnet_left1:
         ipv4_address: 10.0.1.10
-      RCnet_right:
+      RCnet_right1:
         ipv4_address: 10.0.2.10
       
 
@@ -184,7 +188,7 @@ services:
     hostname: RDrouter
     build: 
       context: ./router
-      dockerfile: Dockerfile_router_A
+      dockerfile: Dockerfile_router_D
     #the container as first instruction executes the entrypoint
     entrypoint: entrypoints/ep_routerD.sh
     #set the network and system priviledges high to make it possible to add static route and set the flag for forwarding to 1. Done for all the containers in this primal phase.
@@ -213,11 +217,11 @@ services:
       - "/bin/sleep"
       - "infinity"
     networks:
-      RB-RD_right:
+      RB-RD_right1:
         ipv4_address: 10.3.0.20
-      RDnet_left:
+      RDnet_left1:
         ipv4_address: 10.0.3.10
-      RDnet_right:
+      RDnet_right1:
         ipv4_address: 10.0.4.10
 
 
@@ -236,7 +240,7 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      RCnet_left:
+      RCnet_left1:
         ipv4_address: 10.0.1.20
   red2:
     build: 
@@ -253,7 +257,7 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      RCnet_right:
+      RCnet_right1:
         ipv4_address: 10.0.2.20
   red3:
     build: 
@@ -271,7 +275,7 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      RDnet_left:
+      RDnet_left1:
         ipv4_address: 10.0.3.20
   red4:
     build: 
@@ -288,51 +292,51 @@ services:
       - "/bin/sleep"
       - "infinity"  
     networks:
-      RDnet_right:
+      RDnet_right1:
         ipv4_address: 10.0.4.20
   
 networks:
-  professor-system:
+  professor-system1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.200.0.0/24
-  servidor-system:
+  servidor-system1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.100.0.0/24
-  RA-RB:
+  RA-RB1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.1.0.0/24
-  RB-RC_left:
+  RB-RC_left1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.2.0.0/24
-  RB-RD_right:
+  RB-RD_right1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.3.0.0/24
-  RCnet_left:
+  RCnet_left1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.0.1.0/24
-  RCnet_right:
+  RCnet_right1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.0.2.0/24
-  RDnet_left:
+  RDnet_left1:
     driver: bridge
     ipam:
       config:
         - subnet: 10.0.3.0/24
-  RDnet_right:
+  RDnet_right1:
     driver: bridge
     ipam:
       config:
